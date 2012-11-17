@@ -389,11 +389,13 @@ class MysqliDB {
 
 		$meta = $stmt->result_metadata();
 
+		$row = array();
 		while ($field = $meta->fetch_field()) {
-			array_push($parameters, $row[$field->name]);
+			$row[$field->name] = NULL;
+			$parameters[] = &$row[$field->name];
 		}
 
-                call_user_func_array(array($stmt, "bind_result"),$this->refValues($parameters));
+        call_user_func_array(array($stmt, "bind_result"),$parameters);
 
 		while ($stmt->fetch()) {
 			$x = array();

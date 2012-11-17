@@ -1,7 +1,7 @@
 <?php 
 $config = array(
 
-	"host" => 'localhost', 
-	"user" => 'root', 
-	"pass" => '', 
-	"base" => 'voicela');
+	"host" => 'iutainfosrv2.univ-lyon1.fr', 
+	"user" => 'p1013836', 
+	"pass" => 'iut2012', 
+	"base" => 'p1013836');

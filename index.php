@@ -1,59 +1,98 @@
 <?php
-    require_once('glue.php');
-    require_once('mysqlibd.php');
-    require_once('simplestview.php');
-    require_once('config.php');
+    define('SYS',getcwd());
+    define('SITE_URL',"http://localhost/voicela/");
+    require_once('./libs/glue.php');
+    require_once('./libs/mysqlidb.php');
+    require_once('./libs/simplestview.php');
+    require_once('./controller.php');
+
     $urls = array(
-        '/' => 'index',
-        '/vip/(\d+)' => 'vip',
-        '/film/(\d+)' => 'film',
-        '/photo/(\d+)' => 'photo',
+        '/voicela/index.php' => 'home',
+        '/voicela' => 'home',
+        '/voicela/vip/(\d+)' => 'vip',
+        '/voicela/films' => 'films',
+        '/voicela/film/(\d+)' => 'film',
+        '/voicela/photo/(\d+)' => 'photo',
     );
-    class index {
+    
+
+    class Home extends Controller {
+
         function GET() {
-            $db = new MysqliDb($config["host"], $config["user"], $config["pass"], $config["base"]);
-            $results = $db->get('VIP');
-            if(!empty($results) && count($results) > 0) {            
-                SimplestView::print('index',array($result));
+            $db = new MysqliDb($this->config["host"], $this->config["user"], $this->config["pass"], $this->config["base"]);
+            $results = $db->query('SELECT * from VIP ORDER BY prenom,nom;');
+            
+            if(!empty($results) && count($results) > 0) {       
+                SimplestView::render("header");     
+                SimplestView::render('index',array("results" => $results));
+                SimplestView::render("footer");
             }
         }
     }
 
-    class vip {
+    class vip extends Controller {
         function GET($matches) {
             if ($matches[1]) {
-                $db = new MysqliDb($config["host"], $config["user"], $config["pass"], $config["base"]);
-                $results = $db->where('idVIP',$matches[1])->get('VIP',1);
-                if(!empty($results) && count($results) > 0) {            
-                    SimplestView::print('vip',array($result));
+                $db = new MysqliDb($this->config["host"], $this->config["user"], $this->config["pass"], $this->config["base"]);
+                $result = $db->where('idVIP',$matches[1])->get('VIP',1);
+                $realisateur = $db->where('realisateur',$matches[1])->get('film');
+
+                $params = array($matches[1]);
+                $acteur = $db->rawQuery("SELECT * FROM joue, film WHERE joue.idfilm = film.idfilm AND joue.idVIP = ?", $params);
+                $photo  = $db->rawQuery("SELECT * FROM vip_photo, photo WHERE photo.idphoto = vip_photo.idphoto AND vip_photo.idVIP = ?", $params);
+
+                $data = array();
+                $data["vip"]         = $result[0];
+                $data["acteur"]      = $acteur;
+                $data["realisateur"] = $realisateur;
+                $data["photo"]       = $photo;
+
+                if(!empty($result) && count($result) > 0) {      
+                    SimplestView::render("header");      
+                    SimplestView::render('vip',$data);
+                    SimplestView::render("footer");
                 }
             }
         }
     }
 
-    class film {
+    class film extends Controller{
         function GET($matches) {
             if ($matches[1]) {
-                $db = new MysqliDb($config["host"], $config["user"], $config["pass"], $config["base"]);
-                $results = $db->where('idfilm',$matches[1])->get('film',1);
-                if(!empty($results) && count($results) > 0) {            
-                    SimplestView::print('film',array($result));
+                $db = new MysqliDb($this->config["host"], $this->config["user"], $this->config["pass"], $this->config["base"]);
+                $result = $db->where('idfilm',$matches[1])->get('film',1);
+                if(!empty($result) && count($result) > 0) { 
+                    SimplestView::render("header");           
+                    SimplestView::render('film',array("film" => $result[0]));
+                    SimplestView::render("footer");
                 }
             }
         }
     }
 
-    class photo {
+    class films extends Controller{
+        function GET() {
+                $db = new MysqliDb($this->config["host"], $this->config["user"], $this->config["pass"], $this->config["base"]);
+                $results = $db->query('SELECT * from film ORDER BY titre;');
+                if(!empty($results) && count($results) > 0) {            
+                    SimplestView::render("header");
+                    SimplestView::render('films',array("results"=>$results));
+                    SimplestView::render("footer");
+            }
+        }
+    }
+
+    class photo extends Controller {
         function GET($matches) {
             if ($matches[1]) {
-                $db = new MysqliDb($config["host"], $config["user"], $config["pass"], $config["base"]);
+                $db = new MysqliDb($this->config["host"], $this->config["user"], $this->config["pass"], $this->config["base"]);
 
                 $results = $db->where('idphoto', $matches[1])
                               ->get('photo',1);
 
                 if(!empty($results) && count($results) > 0) {
-                    $finfo = new finfo(FILEINFO_MIME);
-                    header("Content-Type: ". $finfo->buffer($results[0]["contenu"]));
+                    
+                    header("Content-Type: image/jpg");
                     header("Content-Length: " . strlen($results[0]["contenu"]));
                     echo $results[0]["contenu"];
                 }
@@ -61,4 +100,12 @@
         }
     }
     glue::stick($urls);
+
+    function site_url($url = false){
+    if(empty($url)){
+        return SITE_URL;
+    } else {
+        return SITE_URL.$url;
+    }
+}
 ?>
