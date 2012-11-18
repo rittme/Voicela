@@ -39,13 +39,13 @@
 
                 $params = array($matches[1]);
                 $acteur = $db->rawQuery("SELECT * FROM joue, film WHERE joue.idfilm = film.idfilm AND joue.idVIP = ?", $params);
-                //$photo  = $db->rawQuery("SELECT * FROM vip_photo, photo WHERE photo.idphoto = vip_photo.idphoto AND vip_photo.idVIP = ?", $params);
+                $photo  = $db->rawQuery("SELECT photo.idphoto, photo.lieu, photo.date_prise, photo.description FROM vip_photo, photo WHERE photo.idphoto = vip_photo.idphoto AND vip_photo.idVIP = ?", $params);
                 
                 $data = array();
                 $data["vip"]         = $result[0];
                 $data["acteur"]      = $acteur;
                 $data["realisateur"] = $realisateur;
-                //$data["photo"]       = $photo;
+                $data["photo"]       = $photo;
 
                 if(!empty($result) && count($result) > 0) {      
                     SimplestView::render("header");      
