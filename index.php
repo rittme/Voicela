@@ -37,13 +37,13 @@
                 $result = $db->where('idVIP',$matches[1])->get('VIP',1);
                 $realisateur = $db->where('realisateur',$matches[1])->get('film');
 
-                /*$params = array($matches[1]);
+                $params = array($matches[1]);
                 $acteur = $db->rawQuery("SELECT * FROM joue, film WHERE joue.idfilm = film.idfilm AND joue.idVIP = ?", $params);
-                $photo  = $db->rawQuery("SELECT * FROM vip_photo, photo WHERE photo.idphoto = vip_photo.idphoto AND vip_photo.idVIP = ?", $params);
-                */
+                //$photo  = $db->rawQuery("SELECT * FROM vip_photo, photo WHERE photo.idphoto = vip_photo.idphoto AND vip_photo.idVIP = ?", $params);
+                
                 $data = array();
                 $data["vip"]         = $result[0];
-                //$data["acteur"]      = $acteur;
+                $data["acteur"]      = $acteur;
                 $data["realisateur"] = $realisateur;
                 //$data["photo"]       = $photo;
 
