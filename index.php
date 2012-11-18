@@ -4,7 +4,7 @@
     require_once('./libs/glue.php');
     require_once('./libs/mysqlidb.php');
     require_once('./libs/simplestview.php');
-    require_once('./controller.php');
+    require_once('./Controller.php');
 
     $urls = array(
         '/voicela/index.php' => 'home',
