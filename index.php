@@ -1,18 +1,18 @@
 <?php
     define('SYS',getcwd());
-    define('SITE_URL',"http://localhost/voicela/");
+    define('SITE_URL',"http://voicela.pagodabox.com/");
     require_once('./libs/glue.php');
     require_once('./libs/mysqlidb.php');
     require_once('./libs/simplestview.php');
     require_once('./Controller.php');
 
     $urls = array(
-        '/voicela/index.php' => 'home',
-        '/voicela' => 'home',
-        '/voicela/vip/(\d+)' => 'vip',
-        '/voicela/films' => 'films',
-        '/voicela/film/(\d+)' => 'film',
-        '/voicela/photo/(\d+)' => 'photo',
+        '/index.php' => 'home',
+        '/' => 'home',
+        '/vip/(\d+)' => 'vip',
+        '/films' => 'films',
+        '/film/(\d+)' => 'film',
+        '/photo/(\d+)' => 'photo',
     );
     
 
