@@ -1,0 +1,9 @@
+web1:
+  name: pillot
+  php_version: 5.3.10
+  php_error_reporting: 30719
+  php_date_timezone: "Europe/Paris"
+  php_default_locale: "fr_FR"
+  php_extensions:
+    - mysqli
+    - eaccelerator
