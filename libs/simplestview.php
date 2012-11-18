@@ -21,7 +21,7 @@ Class SimplestView {
 		if($return === TRUE) {
 			ob_start();
 		}
-		require_once SYS."../view/".$page.".php";
+		require_once SYS."/view/".$page.".php";
 		if($return === TRUE) {
 			ob_get_clean();
 		}
