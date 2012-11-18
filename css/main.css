@@ -115,6 +115,21 @@ body {
     margin: auto;
 }
 
+.divorce {
+    margin: 0;
+}
+
+.divorce li{
+    font-size: 80%;
+    width: 410px;
+    margin:0 0 5px;
+    text-align: left;
+}
+
+.divorce li a {
+    color:#005;
+}
+
 
 /* ==========================================================================
    Helper classes
